@@ -1,0 +1,30 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "Fine-art photography portfolio",
+  "scripts": {
+    "process": "node scripts/process-images.mjs",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dangboersma/portfolio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/dangboersma/portfolio/issues"
+  },
+  "homepage": "https://github.com/dangboersma/portfolio#readme",
+  "devDependencies": {
+    "sharp": "^0.34.5",
+    "vite": "^8.0.16"
+  },
+  "dependencies": {
+    "ogl": "^1.0.11"
+  }
+}

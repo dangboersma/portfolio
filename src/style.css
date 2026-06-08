@@ -1,0 +1,271 @@
+/* ── Reset & base ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #000;
+  --near-black: #080808;
+  --off-white: #e8e2d8;
+  --dim: rgba(232, 226, 216, 0.45);
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --transition-ui: 0.4s ease;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--black);
+  color: var(--off-white);
+  font-family: var(--serif);
+  overflow: hidden;
+  cursor: none;
+}
+
+#app {
+  position: fixed;
+  inset: 0;
+  background: var(--black);
+}
+
+/* ── WebGL canvas ─────────────────────────────────────────────── */
+#gl-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ── Fallback image (no WebGL) ────────────────────────────────── */
+#fallback-img {
+  position: absolute;
+  inset: 0;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: none;
+}
+.no-webgl #gl-canvas { display: none; }
+.no-webgl #fallback-img { display: block; }
+
+/* ── Exhibition UI overlay ───────────────────────────────────── */
+#exhibition-ui {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Photo number — bottom right */
+.photo-num {
+  position: absolute;
+  bottom: clamp(20px, 4vw, 40px);
+  right: clamp(20px, 4vw, 48px);
+  font-size: clamp(10px, 1.2vw, 13px);
+  letter-spacing: 0.22em;
+  font-weight: 300;
+  color: var(--dim);
+  font-style: italic;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  user-select: none;
+}
+.photo-num.visible { opacity: 1; }
+
+/* Index button — top right */
+.btn-index {
+  position: absolute;
+  top: clamp(20px, 3vw, 36px);
+  right: clamp(20px, 4vw, 48px);
+  background: none;
+  border: none;
+  color: var(--dim);
+  font-family: var(--serif);
+  font-size: clamp(10px, 1.1vw, 12px);
+  letter-spacing: 0.28em;
+  font-weight: 300;
+  text-transform: uppercase;
+  cursor: pointer;
+  pointer-events: all;
+  padding: 8px;
+  opacity: 0;
+  transition: opacity 0.4s ease, color 0.2s ease;
+}
+.btn-index.visible { opacity: 1; }
+.btn-index:hover, .btn-index:focus-visible { color: var(--off-white); outline: none; }
+
+/* Navigation arrows */
+.exhibition-nav {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.btn-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--off-white);
+  font-size: clamp(18px, 2vw, 24px);
+  cursor: pointer;
+  pointer-events: all;
+  padding: 16px 24px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-family: sans-serif;
+}
+.btn-nav:focus-visible { outline: 1px solid var(--dim); opacity: 1; }
+#btn-prev { left: clamp(8px, 2vw, 24px); }
+#btn-next { right: clamp(8px, 2vw, 24px); }
+
+/* Show nav on hover / keyboard focus */
+#exhibition-ui:hover .btn-nav,
+#exhibition-ui:focus-within .btn-nav { opacity: 0.5; }
+.btn-nav:hover { opacity: 1 !important; }
+
+/* Custom cursor */
+#app { cursor: none; }
+#exhibition-ui, .btn-nav, .btn-index { cursor: pointer; }
+
+/* ── Cursor dot ───────────────────────────────────────────────── */
+#cursor {
+  position: fixed;
+  width: 6px; height: 6px;
+  background: rgba(232,226,216,0.7);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease, opacity 0.3s ease;
+  mix-blend-mode: difference;
+}
+
+/* ── Index / grid view ───────────────────────────────────────── */
+#index-view {
+  position: absolute;
+  inset: 0;
+  background: var(--near-black);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+#index-view.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+#index-view.hidden { display: none; }
+
+.index-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: clamp(16px, 3vw, 32px) clamp(20px, 4vw, 48px);
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(232,226,216,0.06);
+}
+
+.btn-exhibition {
+  background: none;
+  border: none;
+  color: var(--dim);
+  font-family: var(--serif);
+  font-size: clamp(10px, 1.1vw, 12px);
+  letter-spacing: 0.28em;
+  font-weight: 300;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 8px;
+  transition: color 0.2s ease;
+}
+.btn-exhibition:hover, .btn-exhibition:focus-visible {
+  color: var(--off-white);
+  outline: none;
+}
+
+.index-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 18vw, 260px), 1fr));
+  gap: clamp(2px, 0.4vw, 6px);
+  padding: clamp(12px, 2vw, 28px) clamp(20px, 4vw, 48px) clamp(20px, 3vw, 40px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(232,226,216,0.15) transparent;
+}
+.index-grid::-webkit-scrollbar { width: 4px; }
+.index-grid::-webkit-scrollbar-track { background: transparent; }
+.index-grid::-webkit-scrollbar-thumb { background: rgba(232,226,216,0.15); border-radius: 2px; }
+
+.index-item {
+  position: relative;
+  aspect-ratio: 3/2;
+  overflow: hidden;
+  cursor: pointer;
+  background: #111;
+  list-style: none;
+}
+.index-item img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.4s ease;
+  image-rendering: auto;
+}
+.index-item img.loaded { opacity: 0.85; }
+.index-item:hover img { opacity: 1; transform: scale(1.02); }
+.index-item:focus-visible { outline: 1px solid rgba(232,226,216,0.4); }
+
+.index-num {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  font-family: var(--serif);
+  font-size: clamp(9px, 1vw, 11px);
+  letter-spacing: 0.18em;
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(232,226,216,0.5);
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+.index-item:hover .index-num { color: rgba(232,226,216,0.85); }
+
+/* Placeholder blur-up */
+.index-item .placeholder {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(8px);
+  transform: scale(1.05);
+  transition: opacity 0.4s ease;
+}
+.index-item .placeholder.hidden { opacity: 0; pointer-events: none; }
+
+/* ── Accessibility ───────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ── Mobile ──────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .btn-nav { opacity: 0.35 !important; }
+  .btn-index, .photo-num { opacity: 1 !important; }
+  .index-grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 2px;
+    padding: 12px;
+  }
+}
+
+/* Focus ring for keyboard nav */
+:focus-visible {
+  outline: 1px solid rgba(232,226,216,0.4);
+  outline-offset: 2px;
+}
