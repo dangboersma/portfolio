@@ -45,7 +45,7 @@ export class IndexView {
       // Blur placeholder
       const placeholder = document.createElement('div');
       placeholder.className = 'placeholder';
-      placeholder.style.backgroundImage = `url(${photo.placeholder})`;
+      placeholder.style.cssText += `background-image:url(${photo.placeholder});background-size:cover;background-position:center;`;
 
       // Main image (lazy)
       const img = document.createElement('img');
@@ -56,7 +56,7 @@ export class IndexView {
       // Use 800px for grid (or smallest available)
       const sizes = photo.sizes;
       const size = sizes.includes(800) ? 800 : sizes[0];
-      img.src = `${photo.dir}/${size}.webp`;
+      img.src = `${import.meta.env.BASE_URL}${photo.dir}/${size}.webp`;
       img.onload = () => {
         img.classList.add('loaded');
         placeholder.classList.add('hidden');

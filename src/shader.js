@@ -58,24 +58,20 @@ vec2 curl2D(vec2 p) {
   return vec2(dx, -dy) / (2.0 * E);
 }
 
-// ── Contain-mode UV (letterbox/pillarbox) ────────────────────────
-vec2 containUV(vec2 uv, float imgAspect, float screenAspect) {
-  float sa = screenAspect;
-  float ia = imgAspect;
+// ── Cover-mode UV (fills viewport, crops as needed) ──────────────
+vec2 coverUV(vec2 uv, float imgAspect, float screenAspect) {
   vec2 result = uv;
-  if (sa > ia) {
-    float sx = ia / sa;
-    result.x = (uv.x - 0.5) / sx + 0.5;
+  if (screenAspect > imgAspect) {
+    float scale = screenAspect / imgAspect;
+    result.y = (uv.y - 0.5) / scale + 0.5;
   } else {
-    float sy = sa / ia;
-    result.y = (uv.y - 0.5) / sy + 0.5;
+    float scale = imgAspect / screenAspect;
+    result.x = (uv.x - 0.5) / scale + 0.5;
   }
-  return result;
+  return clamp(result, 0.0, 1.0);
 }
 
-bool inBounds(vec2 uv) {
-  return uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0;
-}
+bool inBounds(vec2 uv) { return true; }
 
 // ── Kuwahara filter (radius 2, 4 × 3×3 windows) ─────────────────
 vec3 kuwahara(sampler2D tex, vec2 uv, float px) {
@@ -180,8 +176,8 @@ void main() {
   float kR = swirlEnv * 0.0055;
 
   // ── Sample texture A ──
-  vec2 uvA_tex = containUV(uv + rOff1 + c, uFromAspect, uScreenAspect);
-  vec2 uvA_sharp = containUV(uv + rOff1, uFromAspect, uScreenAspect);
+  vec2 uvA_tex = coverUV(uv + rOff1 + c, uFromAspect, uScreenAspect);
+  vec2 uvA_sharp = coverUV(uv + rOff1, uFromAspect, uScreenAspect);
   vec3 sharpA = inBounds(uvA_sharp) ? texture(tFrom, uvA_sharp).rgb : vec3(0.0);
   vec3 paintA = (kR > 0.0005 && inBounds(uvA_tex))
                   ? kuwahara(tFrom, uvA_tex, kR)
@@ -193,8 +189,8 @@ void main() {
                  phase1);
 
   // ── Sample texture B ──
-  vec2 uvB_tex = containUV(uv + rOff2 + c, uToAspect, uScreenAspect);
-  vec2 uvB_sharp = containUV(uv + rOff2, uToAspect, uScreenAspect);
+  vec2 uvB_tex = coverUV(uv + rOff2 + c, uToAspect, uScreenAspect);
+  vec2 uvB_sharp = coverUV(uv + rOff2, uToAspect, uScreenAspect);
   vec3 sharpB = inBounds(uvB_sharp) ? texture(tTo, uvB_sharp).rgb : vec3(0.0);
   vec3 paintB = (kR > 0.0005 && inBounds(uvB_tex))
                   ? kuwahara(tTo, uvB_tex, kR)
@@ -230,7 +226,7 @@ uniform float uScreenAspect;
 in vec2 vUv;
 out vec4 fragColor;
 
-vec2 containUV(vec2 uv, float imgAspect, float screenAspect) {
+vec2 coverUV(vec2 uv, float imgAspect, float screenAspect) {
   vec2 result = uv;
   if (screenAspect > imgAspect) {
     result.x = (uv.x - 0.5) / (imgAspect / screenAspect) + 0.5;
@@ -244,8 +240,8 @@ bool inBounds(vec2 uv) {
 }
 
 void main() {
-  vec2 uvA = containUV(vUv, uFromAspect, uScreenAspect);
-  vec2 uvB = containUV(vUv, uToAspect, uScreenAspect);
+  vec2 uvA = coverUV(vUv, uFromAspect, uScreenAspect);
+  vec2 uvB = coverUV(vUv, uToAspect, uScreenAspect);
   vec3 a = inBounds(uvA) ? texture(tFrom, uvA).rgb : vec3(0.0);
   vec3 b = inBounds(uvB) ? texture(tTo,   uvB).rgb : vec3(0.0);
   float t = uProgress;

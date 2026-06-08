@@ -76,7 +76,7 @@ function init() {
     const showFallback = (i) => {
       const p = photos[i];
       const size = p.sizes[p.sizes.length - 1];
-      fallback.style.backgroundImage = `url(${p.dir}/${size}.webp)`;
+      fallback.style.backgroundImage = `url(${import.meta.env.BASE_URL}${p.dir}/${size}.webp)`;
       setNum(i);
     };
     showFallback(0);
