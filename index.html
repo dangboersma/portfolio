@@ -2,39 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Portfolio</title>
-  <meta name="description" content="Photography portfolio — landscape and nature." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/src/style.css" />
 </head>
 <body>
-  <div id="app">
-    <!-- WebGL canvas for exhibition mode -->
-    <canvas id="gl-canvas" aria-hidden="true"></canvas>
+  <div id="stage">
+    <img id="img-a" class="photo" alt="" />
+    <img id="img-b" class="photo" alt="" />
+  </div>
 
-    <!-- Fallback for no-WebGL / screen readers -->
-    <div id="fallback-img" aria-live="polite"></div>
+  <div id="ui">
+    <button id="btn-index" aria-label="Open index">Index</button>
+    <span id="num" aria-live="polite">01</span>
+  </div>
 
-    <!-- Exhibition UI overlay -->
-    <div id="exhibition-ui" role="main" aria-label="Photography exhibition">
-      <div id="photo-num" class="photo-num" aria-live="polite" aria-atomic="true">01</div>
-      <nav class="exhibition-nav" aria-label="Exhibition navigation">
-        <button id="btn-prev" class="btn-nav" aria-label="Previous photograph">&#8592;</button>
-        <button id="btn-next" class="btn-nav" aria-label="Next photograph">&#8594;</button>
-      </nav>
-      <button id="btn-index" class="btn-index" aria-label="Open photo index">Index</button>
+  <nav id="arrows" aria-label="Navigate photos">
+    <button id="btn-prev" aria-label="Previous">&#8592;</button>
+    <button id="btn-next" aria-label="Next">&#8594;</button>
+  </nav>
+
+  <div id="index-panel" class="hidden" role="dialog" aria-label="All photographs" aria-modal="true">
+    <div id="index-header">
+      <button id="btn-close" aria-label="Return to slideshow">&#10005;</button>
     </div>
-
-    <!-- Index / grid view -->
-    <div id="index-view" class="hidden" role="dialog" aria-label="Photo index" aria-modal="true">
-      <div class="index-header">
-        <button id="btn-exhibition" class="btn-exhibition" aria-label="Return to exhibition">Exhibition</button>
-      </div>
-      <div id="index-grid" class="index-grid" role="list"></div>
-    </div>
+    <div id="index-grid" role="list"></div>
   </div>
 
   <script type="module" src="/src/main.js"></script>
