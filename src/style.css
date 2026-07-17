@@ -52,11 +52,11 @@ html, body {
   background: none;
   border: none;
   font-family: var(--serif);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 300;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--dim);
+  color: rgba(232, 226, 216, 0.75);
   cursor: pointer;
   pointer-events: all;
   transition: color 0.2s;
