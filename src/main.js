@@ -132,9 +132,8 @@ function buildGrid() {
     item.dataset.index = i;
     item.setAttribute('role', 'listitem');
     item.setAttribute('tabindex', '0');
-    item.style.backgroundImage = `url(${p.placeholder})`;
-    item.style.backgroundSize = 'cover';
-    item.style.backgroundPosition = 'center';
+    // Natural aspect ratio so no cropping in the grid
+    item.style.aspectRatio = `${p.width} / ${p.height}`;
 
     const img = document.createElement('img');
     img.alt = `Photograph ${p.num}`;

@@ -144,10 +144,9 @@ body:hover #arrows { opacity: 1; }
 #btn-close:hover { color: var(--white); }
 
 #index-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 3px;
-  padding: 4px 4px 40px;
+  columns: 3;
+  column-gap: 3px;
+  padding: 3px 3px 40px;
   overflow-y: auto;
   flex: 1;
   scrollbar-width: thin;
@@ -156,20 +155,21 @@ body:hover #arrows { opacity: 1; }
 
 .grid-item {
   position: relative;
-  aspect-ratio: 3/2;
-  overflow: hidden;
+  break-inside: avoid;
+  margin-bottom: 3px;
   cursor: pointer;
   background: #111;
+  overflow: hidden;
 }
 .grid-item img {
-  width: 100%; height: 100%;
-  object-fit: cover;
+  width: 100%;
+  height: auto;
   display: block;
   opacity: 0;
   transition: opacity 0.4s ease, transform 0.3s ease;
 }
 .grid-item img.loaded { opacity: 0.8; }
-.grid-item:hover img { opacity: 1; transform: scale(1.03); }
+.grid-item:hover img { opacity: 1; transform: scale(1.02); }
 .grid-item .item-num {
   position: absolute;
   bottom: 7px; right: 9px;
@@ -202,11 +202,7 @@ body:hover #arrows { opacity: 1; }
   #arrows { display: none; }
   #btn-index { padding: 20px 20px 12px; }
   #num { padding: 12px 18px 20px; }
-  #index-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    padding: 2px 2px 30px;
-  }
+  #index-grid { columns: 2; }
 }
 
 /* ── Reduced motion ── */
