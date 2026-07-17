@@ -208,7 +208,7 @@ document.getElementById('stage').addEventListener('click', e => {
   e.clientX < window.innerWidth / 2 ? prev() : next();
 });
 
-// Touch swipe
+// Touch swipe — horizontal OR vertical
 let tx = 0, ty = 0;
 document.addEventListener('touchstart', e => {
   tx = e.touches[0].clientX;
@@ -218,8 +218,14 @@ document.addEventListener('touchend', e => {
   if (indexOpen) return;
   const dx = e.changedTouches[0].clientX - tx;
   const dy = e.changedTouches[0].clientY - ty;
-  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+  const adx = Math.abs(dx), ady = Math.abs(dy);
+  if (adx < 30 && ady < 30) return; // tap, not swipe
+  if (adx > ady) {
+    // Horizontal: left = next, right = prev
     dx < 0 ? next() : prev();
+  } else {
+    // Vertical: up = next, down = prev
+    dy < 0 ? next() : prev();
   }
 }, { passive: true });
 
