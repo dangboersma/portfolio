@@ -15,7 +15,7 @@ const EXCLUDE = new Set([
   '_DSC0731-Enhanced2sharp.jpg',             // kept -2 version
   '_DSC97222.jpg',                            // kept -2 version
   '607A9727.jpg',                             // kept _DxO version
-  'sunset_over_7_sharp_16x20-2.jpg',         // kept original
+  // 'sunset_over_7_sharp_16x20-2.jpg',       // now included
   'IMG_20210731_201106-Pano-2-Edit copy.jpg', // kept larger Pano version
 ]);
 
