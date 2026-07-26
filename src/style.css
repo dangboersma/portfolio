@@ -13,7 +13,6 @@ html, body {
   overflow: hidden;
   font-family: var(--serif);
   color: var(--white);
-  cursor: none;
 }
 
 /* ── Stage ── */
@@ -186,18 +185,8 @@ body:hover #arrows { opacity: 1; }
   outline: 1px solid rgba(232,226,216,0.4);
 }
 
-/* ── Custom cursor ── */
-#cursor {
-  position: fixed;
-  width: 5px; height: 5px;
-  background: rgba(232,226,216,0.8);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: transform 0.08s ease;
-  mix-blend-mode: difference;
-}
+/* clickable areas */
+#btn-index, #btn-close, #arrows button, #stage, .grid-item { cursor: pointer; }
 
 /* ── Mobile ── */
 @media (max-width: 700px) {

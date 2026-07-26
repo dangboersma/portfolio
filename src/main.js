@@ -51,12 +51,6 @@ function show(idx) {
 
   incoming.onload = null;
   incoming.onerror = null;
-
-  if (incoming.src === src || incoming.complete && incoming.src.endsWith(src.replace(/^.*\/portfolio/, ''))) {
-    swap();
-    return;
-  }
-
   incoming.onload = swap;
   incoming.onerror = swap;
   incoming.src = src;
@@ -175,15 +169,6 @@ document.addEventListener('touchend', e => {
   if (adx > ady) dx < 0 ? show(current + 1) : show(current - 1);
   else           dy < 0 ? show(current + 1) : show(current - 1);
 }, { passive: true });
-
-// Custom cursor
-const cursor = document.createElement('div');
-cursor.id = 'cursor';
-document.body.appendChild(cursor);
-document.addEventListener('mousemove', e => {
-  cursor.style.left = e.clientX + 'px';
-  cursor.style.top  = e.clientY + 'px';
-});
 
 // ── Init ──────────────────────────────────────────────────────────
 imgA.classList.add('visible');
