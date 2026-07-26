@@ -21,10 +21,17 @@ const EXCLUDE = new Set([
 
 const SIZES = [400, 800, 1600, 2400];
 
-// Sort: YYYYMMDD prefix first, then alphabetical (case-insensitive)
+// Files pinned to the front, in order
+const PIN_FIRST = [
+  'CathedralofManhattan.jpg',
+];
+
+// Sort: pinned first, then YYYYMMDD prefix, then alphabetical
 function sortKey(name) {
+  const pin = PIN_FIRST.indexOf(name);
+  if (pin >= 0) return `0_${String(pin).padStart(4, '0')}_${name}`;
   const m = name.match(/^(\d{8})/);
-  return m ? `0_${m[1]}_${name}` : `1_${name.toLowerCase()}`;
+  return m ? `1_${m[1]}_${name}` : `2_${name.toLowerCase()}`;
 }
 
 async function exists(p) {
