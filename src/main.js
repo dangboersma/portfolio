@@ -240,5 +240,5 @@ document.addEventListener('mousemove', e => {
 // ── Init ─────────────────────────────────────────────────────────
 show(0, true);
 setTimeout(() => numEl.classList.add('show'), 600);
-startAuto();
+// No auto-advance — manual navigation only
 preload(1); preload(2);
