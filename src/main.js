@@ -170,6 +170,13 @@ document.addEventListener('touchend', e => {
   else           dy < 0 ? show(current + 1) : show(current - 1);
 }, { passive: true });
 
+// ── Service Worker ───────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register(`${BASE}sw.js`);
+  });
+}
+
 // ── Init ──────────────────────────────────────────────────────────
 imgA.classList.add('visible');
 imgA.onload = () => { numEl.classList.add('show'); };
