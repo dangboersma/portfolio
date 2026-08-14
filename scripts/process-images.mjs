@@ -67,25 +67,23 @@ async function main() {
     const { width, height } = meta;
     console.log(`  [${num}] ${name}  (${width}×${height})`);
 
-    // Generate WebP at each size
+    // Generate WebP at each size (always regenerate — skipping causes stale files when photos are reordered)
     const builtSizes = [];
     for (const w of SIZES) {
       const out = path.join(outD, `${w}.webp`);
-      if (!(await exists(out))) {
-        if (w > width * 1.05) continue; // don't upscale >5%
-        await sharp(src)
-          .resize(w)
-          .webp({ quality: 85, effort: 4 })
-          .toFile(out);
-      }
+      if (w > width * 1.05) continue; // don't upscale >5%
+      await sharp(src)
+        .resize(w)
+        .webp({ quality: 85, effort: 4 })
+        .toFile(out);
       builtSizes.push(w);
     }
 
     // Always ensure at least the 400px version exists
     const smallOut = path.join(outD, '400.webp');
-    if (!(await exists(smallOut))) {
+    if (!builtSizes.includes(400)) {
       await sharp(src).resize(400).webp({ quality: 85, effort: 4 }).toFile(smallOut);
-      if (!builtSizes.includes(400)) builtSizes.unshift(400);
+      builtSizes.unshift(400);
     }
 
     // Low-res placeholder (20px wide, base64)
